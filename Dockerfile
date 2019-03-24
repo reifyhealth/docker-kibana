@@ -32,9 +32,6 @@ RUN curl -L -O https://github.com/bitly/oauth2_proxy/releases/download/v2.2/oaut
 RUN rm "/opt/${KIBANA_44_PKG}/config/kibana.yml"
 ADD templates/opt/kibana-4.4.x/ /opt/kibana-${KIBANA_44_VERSION}/config
 
-ADD patches /patches
-RUN patch -p1 /opt/kibana-${KIBANA_44_VERSION} < /patches/0001-Set-authorization-header-when-connecting-to-ES.patch
-
 # Add script that starts NGiNX in front of Kibana and tails the NGiNX access/error logs.
 ADD bin .
 RUN chmod 700 ./run-kibana.sh

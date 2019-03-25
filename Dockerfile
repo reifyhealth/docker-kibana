@@ -16,11 +16,15 @@ ENV KIBANA_44_PKG $PKG_NAME-$KIBANA_44_VERSION-$PKG_PLATFORM
 
 # Kibana 4.4
 RUN echo "Downloading https://download.elastic.co/kibana/kibana/${KIBANA_44_PKG}.tar.gz" && \
+    echo "node found at $(which node)" && \
     curl -O "https://download.elastic.co/kibana/kibana/${KIBANA_44_PKG}.tar.gz" && \
     mkdir /opt && \
     echo "${KIBANA_44_SHA1SUM}  ${KIBANA_44_PKG}.tar.gz" | sha1sum -c - && \
     tar xzf "${KIBANA_44_PKG}.tar.gz" -C /opt && \
-    rm "${KIBANA_44_PKG}.tar.gz"
+    rm "${KIBANA_44_PKG}.tar.gz" && \
+    rm -fr /opt/${KIBANA_44_PKG}/node/ && \
+    mkdir -p /opt/${KIBANA_44_PKG}/node/bin/  && \
+    ln -s $(which node) /opt/${KIBANA_44_PKG}/node/bin/node
 
 # Download Oauth2 Proxy 2.2, extract into /opt/oauth2_proxy
 RUN curl -L -O https://github.com/bitly/oauth2_proxy/releases/download/v2.2/oauth2_proxy-2.2.0.linux-amd64.go1.8.1.tar.gz && \

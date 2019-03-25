@@ -37,7 +37,9 @@ RUN rm "/opt/${KIBANA_44_PKG}/config/kibana.yml"
 ADD templates/opt/kibana-4.4.x/ /opt/kibana-${KIBANA_44_VERSION}/config
 
 ADD patches /patches
-RUN patch -p1 /opt/kibana-4.4.1-linux-x64 < /patches/0001-Set-authorization-header-when-connecting-to-ES.patch
+RUN cd /opt/kibana-4.4.1-linux-x64 && \
+    patch -p1 -i /patches/0001-Set-authorization-header-when-connecting-to-ES.patch && \
+    cd /
 
 # Add script that starts NGiNX in front of Kibana and tails the NGiNX access/error logs.
 ADD bin .

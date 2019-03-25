@@ -8,8 +8,8 @@ RUN apk update && \
 
 # We're going to install Kibana 4.4.X, which supports Elasticsearch 2.x
 
-ENV KIBANA_44_VERSION 4.4.2
-ENV KIBANA_44_SHA1SUM 6251dbab12722ea1a036d8113963183f077f9fa7
+ENV KIBANA_44_VERSION 4.4.1
+ENV KIBANA_44_SHA1SUM b4f1b5d89a0854e3fb1e6d31faa1bc78e063b083
 ENV PKG_NAME kibana
 ENV PKG_PLATFORM linux-x64
 ENV KIBANA_44_PKG $PKG_NAME-$KIBANA_44_VERSION-$PKG_PLATFORM
@@ -35,6 +35,9 @@ RUN curl -L -O https://github.com/bitly/oauth2_proxy/releases/download/v2.2/oaut
 # Overwrite default config with our config.
 RUN rm "/opt/${KIBANA_44_PKG}/config/kibana.yml"
 ADD templates/opt/kibana-4.4.x/ /opt/kibana-${KIBANA_44_VERSION}/config
+
+ADD patches /patches
+RUN patch -p1 /opt/kibana-4.4.1-linux-x64 < /patches/0001-Set-authorization-header-when-connecting-to-ES.patch
 
 # Add script that starts NGiNX in front of Kibana and tails the NGiNX access/error logs.
 ADD bin .
